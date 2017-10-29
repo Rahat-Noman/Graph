@@ -1,0 +1,83 @@
+/*Given an unweighted undirected graph, run dfs and find the components with discovery time and finishing time. Assume that you are running dfs in increasing order.
+Input
+First line: N ( 0&lt;N&lt;=1000), number of nodes.
+Second line: M (0&lt;M&lt;=20000), number of edges.
+Next M lines, each: U V (0&lt;=U, V&lt;N), defines an edge from U to V.
+Output
+Total N lines, each for one node. Print the component number, discovery time and finishing time each node. See sample for more clarification.
+6
+6
+1 2
+1 3
+0 4
+2 3
+5 4
+5 0	0: 1 1 6
+1: 2 7 12
+2: 2 8 11
+3: 2 9 10
+4: 1 2 5
+5: 1 3 4
+
+*/
+
+
+
+#include<iostream>
+#include<vector>
+#include<queue>
+#include<algorithm>
+using namespace std;
+vector< int > adj[100005];
+const int mxn = 20002;
+int com[20002] ;
+int dv[20002] , fin[20002];
+bool vis[mxn];
+int cnt = 1 , comp = 0;
+void dfs(int u)
+{
+    vis[u] = true;
+    com[u] = comp;
+    dv[u] = cnt++;
+    for(int i = 0; i < (int) adj[u].size(); i++)
+    {
+        int v= adj[u][i];
+        if(!vis[v])
+        {
+            dfs(v);
+        }
+    }
+    fin[u] = cnt++;
+    return;
+}
+int main()
+{
+    int n , m;
+    cin>>n>>m;
+    int u , v;
+    for(int i  =0; i < m ; i++)
+    {
+        cin>>u>>v;
+        adj[u].push_back(v);
+        adj[v].push_back(u);
+    }
+    for(int i = 0; i < n ; i++)
+    {
+        sort(adj[i].begin() , adj[i].end());
+    }
+    for(int i = 0; i < mxn ; i++)
+        vis[i] = false;
+    for(int i = 0; i < n ; i++)
+    {
+        if(!vis[i])
+        {
+            comp++;
+            dfs(i);
+        }
+    }
+    for(int i = 0; i < n ; i++)
+    {
+        cout<<i<<": "<<com[i]<<" "<<dv[i]<<" "<<fin[i]<<endl;
+    }
+    return 0;
+}
