@@ -1,0 +1,98 @@
+/*
+Problem F
+
+Given an unweighted undirected graph, find shortest path from a single source node. Print the path. If there are multiple shortest path, print the lexicographically smallest one.
+Input
+First line: N ( 0&lt;N&lt;=100), number of nodes.
+Second line: M (0&lt;M&lt;=2000), number of edges.
+Next M lines, each: U V (0&lt;=U, V&lt;N), defines an edge from U to V.
+Output
+Total N lines, each for one node. Print the shortest path of each node considering node 0 as the source. See sample for more clarification.
+6
+5
+1 3
+1 2
+0 1
+3 4
+2 4	0: 0
+1: 0 1
+2: 0 1 2
+3: 0 1 3
+4: 0 1 2 4
+5: Not Reachable
+
+Explanation:
+For Node 4, there are 2 shortest paths, 0 1 2 4 and 0 1 3 4.  0 1 2 4 is lexicographically smaller. 
+*/
+
+
+
+#include<iostream>
+#include<vector>
+#include<queue>
+using namespace std;
+const int mxn = 99999999;
+vector< int > adj[100005];
+int dis[100005] , parent[100005];
+void bfs(int u)
+{
+    for(int i= 0; i < 100005 ; i++)
+    {
+        dis[i] = mxn;
+    }
+    dis[u] = 0;
+    queue< int > Q;
+    parent[0] = -1;
+    Q.push(u);
+    while(!Q.empty())
+    {
+        u = Q.front();
+        Q.pop();
+        for(int i = 0; i < (int) adj[u].size(); i++)
+        {
+            int v = adj[u][i];
+            if(dis[v] > dis[u]+1)
+            {
+                dis[v] = dis[u] + 1;
+                parent[v] = u;
+                Q.push(v);
+            }
+            else if(dis[v] == dis[u] + 1 && parent[v] > u)
+            {
+                parent[v] = u;
+            }
+        }
+    }
+
+
+}
+void path(int u)
+{
+    if(u==-1)
+    return;
+    path(parent[u]);
+    cout<<" "<<u;
+}
+int main()
+{
+    int n , m;
+    cin>>n>>m;
+    int u , v;
+    for(int i  =0; i < m ; i++)
+    {
+        cin>>u>>v;
+        adj[u].push_back(v);
+        adj[v].push_back(u);
+    }
+    bfs(0);
+    for(int i = 0; i < n ; i++)
+    {
+        cout<<i<<":";
+        if(dis[i]!= mxn)
+        path(i);
+        else
+        cout<<" Not Reachable";
+        cout<<endl;
+    }
+    return 0;
+}
