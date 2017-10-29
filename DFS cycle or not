@@ -1,0 +1,81 @@
+/*
+Problem D
+
+Given an undirected graph, find if the graph has any cycle.
+Input
+First line: N ( 0&lt;N&lt;=100000), number of nodes.
+Second line: M (0&lt;M&lt;=200000), number of edges.
+Next M lines, each: U V (0&lt;=U, V&lt;N), defines an edge from U to V.
+Output
+Print Yes/No. See sample for more clarification.
+6
+4
+1 2
+1 3
+0 4
+5 4	No
+3
+3
+1 2
+2 0
+0 1	Yes
+*/
+
+
+
+
+#include<iostream>
+#include<vector>
+#include<queue>
+#include<algorithm>
+using namespace std;
+vector< int > adj[100005];
+const int mxn = 200002;
+#define g 1
+#define w 0
+#define b 2
+int vis[mxn];
+bool flag =false;
+void dfs(int u)
+{
+    vis[u] = g;
+    for(int i = 0; i < (int) adj[u].size(); i++)
+    {
+        int v= adj[u][i];
+        if(vis[v]==w)
+        {
+            dfs(v);
+        }
+        else if(vis[v]==g)
+        {
+        flag = true;
+        }
+    }
+    vis[u] = b;
+    return;
+}
+int main()
+{
+    int n , m;
+    cin>>n>>m;
+    int u , v;
+    for(int i  =0; i < m ; i++)
+    {
+        cin>>u>>v;
+        adj[u].push_back(v);
+    }
+    for(int i = 0; i < mxn ; i++)
+        vis[i] = w;
+    for(int i = 0; i < n ; i++)
+    {
+        if(vis[i]==w)
+        {
+            dfs(i);
+        }
+    }
+    if(flag)
+    cout<<"Yes"<<endl;
+    else
+    cout<<"No"<<endl;
+    return 0;
+}
